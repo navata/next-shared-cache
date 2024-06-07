@@ -352,7 +352,6 @@ export class CacheHandler implements NextCacheHandler {
                     kind: 'PAGE',
                     html: pageHtmlFile,
                     pageData,
-                    postponed: undefined,
                     headers: undefined,
                     status: undefined,
                 },
@@ -579,8 +578,18 @@ export class CacheHandler implements NextCacheHandler {
             implicitTags: softTags,
         });
 
-        if (cachedData?.value?.kind === 'ROUTE') {
-            cachedData.value.body = Buffer.from(cachedData.value.body as unknown as string, 'base64');
+        switch (cachedData?.value?.kind) {
+            case 'APP_PAGE': {
+                cachedData.value.rscData = Buffer.from(cachedData.value.rscData as unknown as string, 'base64');
+                break;
+            }
+            case 'ROUTE': {
+                cachedData.value.body = Buffer.from(cachedData.value.body as unknown as string, 'base64');
+                break;
+            }
+            default: {
+                break;
+            }
         }
 
         if (!cachedData && CacheHandler.#fallbackFalseRoutes.has(cacheKey)) {
@@ -619,6 +628,19 @@ export class CacheHandler implements NextCacheHandler {
         let value = incrementalCacheValue;
 
         switch (value?.kind) {
+            case 'APP_PAGE': {
+                value = {
+                    kind: 'APP_PAGE',
+                    headers: value.headers,
+                    html: value.html,
+                    postponed: value.postponed,
+                    // replace the rscData with a base64 encoded string to save space
+                    rscData: value.rscData?.toString('base64') as unknown as Buffer | undefined,
+                    status: value.status,
+                };
+                cacheHandlerValueTags = getTagsFromPageData(value);
+                break;
+            }
             case 'PAGE': {
                 cacheHandlerValueTags = getTagsFromPageData(value);
                 break;

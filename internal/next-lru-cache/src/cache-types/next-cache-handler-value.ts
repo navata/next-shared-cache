@@ -27,11 +27,14 @@ function calculateObjectSize({ value }: CacheHandlerValue): number {
             // Size based on the length of the body
             return value.body.length;
         }
+        case 'APP_PAGE': {
+            return value.html.length + (JSON.stringify(value.rscData)?.length ?? 0);
+        }
+        case 'PAGE': {
+            return value.html.length + (JSON.stringify(value.pageData)?.length ?? 0);
+        }
         default: {
-            // Rough estimate calculation for other types
-            // Combine HTML length and page data length
-            const pageDataLength = value.pageData ? JSON.stringify(value.pageData).length : 0;
-            return value.html.length + pageDataLength;
+            throw new Error('Unknown cache handler value kind');
         }
     }
 }

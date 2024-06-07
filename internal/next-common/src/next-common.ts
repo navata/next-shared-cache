@@ -1,6 +1,3 @@
-// biome-ignore lint/style/useNodejsImportProtocol: RollupError: "OutgoingHttpHeaders" is not exported by "node:http"
-import type { OutgoingHttpHeaders } from 'http';
-
 import type { RouteMetadata as NextRouteMetadata } from 'next/dist/export/routes/types';
 import type { CacheHandler, CacheHandlerValue as NextCacheHandlerValue } from 'next/dist/server/lib/incremental-cache';
 import type FileSystemCache from 'next/dist/server/lib/incremental-cache/file-system-cache';
@@ -17,6 +14,8 @@ export type {
     IncrementalCacheValue,
     IncrementalCacheEntry,
     IncrementalCacheKindHint,
+    IncrementalCachedPageValue,
+    IncrementalCachedAppPageValue,
 } from 'next/dist/server/response-cache/types';
 
 export {
@@ -100,15 +99,6 @@ export type UnwrappedCacheHandler = {
     get(...args: CacheHandlerParametersGetWithTags): Awaited<CacheHandlerReturnTypeGet>;
     set(...args: CacheHandlerParametersSet): Awaited<CacheHandlerReturnTypeSet>;
     revalidateTag(...args: CacheHandlerParametersRevalidateTag): Awaited<CacheHandlerReturnTypeRevalidateTag>;
-};
-
-export type IncrementalCachedPageValue = {
-    kind: 'PAGE';
-    html: string;
-    pageData: object;
-    postponed: string | undefined;
-    headers: OutgoingHttpHeaders | undefined;
-    status: number | undefined;
 };
 
 export type TagsManifest = {

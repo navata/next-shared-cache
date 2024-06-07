@@ -11,7 +11,7 @@
         "clean": "rimraf ./.turbo ./node_modules"
     },
     "dependencies": {
-        "next": "14.2.0-canary.61"
+        "next": "15.0.0-canary.22"
     },
     "devDependencies": {
         "@repo/typescript-config": "*",
